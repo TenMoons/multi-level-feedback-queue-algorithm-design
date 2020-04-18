@@ -7,5 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="beautyeye_lnf" level="project" />
+    <orderEntry type="library" name="SwingSets2(BeautyEyeLNFDemo)" level="project" />
   </component>
 </module>
