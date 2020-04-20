@@ -1,9 +1,7 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Random;
+package model;
 
 //进程控制块类
-public class PCB {
+public class PCB implements Cloneable{
     // 进程标识符
     private int pid;
     // 进程状态标识
@@ -16,11 +14,15 @@ public class PCB {
     private int alive;
     // 进程到达时间
     private int arrival;
-    // 进程请求页序列
-    private ArrayList<Integer> pageMap = new ArrayList<>();
-    // 进程分配的物理块
-    private LinkedList<Page> pageBlock = new LinkedList<>();
-    private LinkedList<Page> lruSerial = new LinkedList<>();
+    // 进程剩余时间
+    private int leftTime;
+    // 进程开始时间
+    private int startTime;
+    // 进程完成时间
+    private int finishTime;
+    // 进程等待时间
+    private int waitingTime;
+
 
     /**
      * 空构造函数
@@ -43,32 +45,10 @@ public class PCB {
         this.life = life;
         this.alive = 0;
         this.arrival = arrival;
-        // 随机设定页号
-        for (int i = 0; i < life; i++) {
-            Random random = new Random();
-            int randomPage = random.nextInt(10);
-            this.pageMap.add(randomPage);
-        }
-    }
-
-    /**
-     * 构造函数
-     * @param pid 进程标识符
-     * @param status 进程状态
-     * @param priority 优先级
-     * @param life 轮转时间片
-     * @param arrival 到达时间
-     * @param pageNum 页号
-     */
-    public PCB(int pid, String status, int priority, int life, int arrival, int[] pageNum) {
-        this.pid = pid;
-        this.status = status;
-        this.priority = priority;
-        this.life = life;
-        this.alive = 0;
-        this.arrival = arrival;
-        for (int page : pageNum)
-            pageMap.add(page);
+        this.leftTime = life;
+        this.finishTime = -1;
+        this.waitingTime = -1;
+        this.startTime = -1;
     }
 
     public int getPid() {
@@ -119,28 +99,42 @@ public class PCB {
         this.arrival = arrival;
     }
 
-    public ArrayList<Integer> getPageMap() {
-        return pageMap;
+    public int getLeftTime() {
+        return leftTime;
     }
 
-    public void setPageMap(ArrayList<Integer> pageMap) {
-        this.pageMap = pageMap;
+    public void setLeftTime(int leftTime) {
+        this.leftTime = leftTime;
     }
 
-    public LinkedList<Page> getPageBlock() {
-        return pageBlock;
+    public int getFinishTime() {
+        return finishTime;
     }
 
-    public void setPageBlock(LinkedList<Page> pageBlock) {
-        this.pageBlock = pageBlock;
+    public void setFinishTime(int finishTime) {
+        this.finishTime = finishTime;
     }
 
-    public LinkedList<Page> getLruSerial() {
-        return lruSerial;
+    public int getWaitingTime() {
+        return waitingTime;
     }
 
-    public void setLruSerial(LinkedList<Page> lruSerial) {
-        this.lruSerial = lruSerial;
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    @Override
+    public Object clone () throws CloneNotSupportedException {
+        Object copyPCB = super.clone();
+        return copyPCB;
     }
 }
 
