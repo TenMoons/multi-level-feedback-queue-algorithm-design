@@ -1,7 +1,6 @@
 package view;
 
 import com.sun.awt.AWTUtilities;
-import org.jb2011.lnf.beautyeye.ch12_progress.BEProgressBarUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,12 +13,12 @@ public class Initialization extends JWindow implements Runnable {
     public Initialization(String filename) {
         Container container = getContentPane(); // 得到容器
         JPanel pane = new JPanel();
-        pane.setBackground(Color.WHITE);
         pane.setOpaque(true);
         pane.setBorder(null);
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); // 设置光标
 
-        JLabel j = new JLabel(new ImageIcon(filename));
+        URL url = this.getClass().getResource(filename);
+        JLabel j = new JLabel(new ImageIcon(url));
         pane.add(j);
         container.add(pane, BorderLayout.CENTER); // 增加图片
 
@@ -29,11 +28,15 @@ public class Initialization extends JWindow implements Runnable {
         progress.setBackground(Color.white); // 设置背景色
         container.add(progress, BorderLayout.SOUTH); // 增加进度条到容器上
 
+
+        this.setSize(400, 258);
         Dimension screen = getToolkit().getScreenSize(); // 得到屏幕尺寸
+        this.setBounds(screen.width / 2 - getSize().width / 2,
+                (screen.height - getSize().height) / 2, 400 ,258);
         pack(); // 窗口适应组件尺寸
-        setLocation((screen.width - getSize().width) / 2,
-                (screen.height - getSize().height) / 2); // 设置窗口位置
-        AWTUtilities.setWindowOpacity(this, 0.8f);
+//        setLocation((screen.width - getSize().width) / 2,
+//                (screen.height - getSize().height) / 2); // 设置窗口位置
+//        AWTUtilities.setWindowOpacity(this, 0.8f);
 
     }
 
@@ -46,14 +49,14 @@ public class Initialization extends JWindow implements Runnable {
     public void run() {
         setVisible(true); // 显示窗口
         try {
-            for (int i = 0; i < 20; i++) {
-                Thread.sleep(200); // 线程休眠
+            for (int i = 0; i < 100; i++) {
+                Thread.sleep(50); // 线程休眠
                 progress.setValue(progress.getValue() + 1); // 设置进度条值
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         dispose(); // 释放窗口
-        new MFQ().initWindow();
+        new Simulator().initWindow();
     }
 }

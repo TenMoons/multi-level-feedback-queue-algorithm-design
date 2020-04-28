@@ -45,14 +45,8 @@ public class StatusTableModel extends DefaultTableModel {
      *
      */
     public void addRowLocation(Object[] object) {
-        //rowData[0] = "文件" + (this.getRowCount() + 1);
         addRow(object);//增加一行数据
         dataLength++;
-    }
-
-    public void removeRowLocation(int index) {
-        removeRow(index);
-        dataLength--;
     }
 
     public void insertRowLocation(int row, Object[] rowData) {
@@ -62,8 +56,6 @@ public class StatusTableModel extends DefaultTableModel {
 
     @Override
     public Class getColumnClass(int columnIndex) {
-        // TODO Auto-generated method stub
-        //	return super.getColumnClass(columnIndex);
         return getValueAt(0, columnIndex).getClass();
     }
 }

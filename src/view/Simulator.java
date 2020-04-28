@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MFQ {
+public class Simulator {
     // 设置第一级队列的时间片大小默认值
     public static int timeSlice = 2;
     // 队列数量
@@ -90,15 +90,6 @@ public class MFQ {
 
     private static boolean isPCBStart_FCFS = false;
 
-    /**
-     * ！！！！！主函数！！！
-     * @param args
-     */
-    public static void main(String[] args) {
-        Initialization initialization = new Initialization("images\\logoblue.png");
-        initialization.start(); // 运行启动界面
-    }
-
     public static void initMenus() {
         // 菜单组件
         menuBar = new JMenuBar();
@@ -110,7 +101,7 @@ public class MFQ {
         // 帮助栏
         helpMenu = new JMenu("<html><u>H</u><html>elp");
         tutorialItemforMFQ = new JMenuItem("MFQ Help");
-        tutorialItemforLRU = new JMenuItem("SJF Help");
+        tutorialItemforLRU = new JMenuItem("FCFS Help");
         aboutItem = new JMenuItem("About");
 
         // 创建菜单栏-设置
@@ -140,7 +131,7 @@ public class MFQ {
             UIManager.put("ToolBar.isPaintPlainBackground", Boolean.TRUE);
         }
         catch(Exception e) {
-            //TODO exception
+            e.printStackTrace();
         }
 
         // 主框架
@@ -232,9 +223,7 @@ public class MFQ {
         container.add(clearButton);
         container.add(statusLabel);
 
-        // TODO: 设置窗口 ICON
-
-        frame.setLocation(50, 50);
+        frame.setLocation(200, 50);
         frame.setSize(1280, 960);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
@@ -270,7 +259,7 @@ public class MFQ {
             timeSlice *= 2;
         }
         // 初始化程序状态
-        statusLabel.setText("      就绪");
+        statusLabel.setText("      就绪                          (温馨提示：建议先运行FCFS算法，再运行MLFQ，切不可同时调度)");
     }
 
     // 给窗口中所有控件绑定监听器
@@ -278,11 +267,11 @@ public class MFQ {
         createProcessItem.addActionListener(e -> createProcess());
         setTimeSliceItem.addActionListener(e -> setTimeSlice());
         exitSystemItem.addActionListener(e -> System.exit(0));
-        pauseButton.addActionListener(e -> pauseMFQSimulation());
-        contButton.addActionListener(e -> contMFQSimulation());
-        startButton_MFQ.addActionListener(e -> startMFQ());
+        pauseButton.addActionListener(e -> pauseSimulation());
+        contButton.addActionListener(e -> contSimulation());
+        startButton_MFQ.addActionListener(e -> startMLFQ());
         startButton_FCFS.addActionListener(e -> startFCFS());
-        stopButton.addActionListener(e -> stopMFQSimulation());
+        stopButton.addActionListener(e -> stopSimulation());
         clearButton.addActionListener(e -> clear());
         tutorialItemforMFQ.addActionListener(e -> JOptionPane.showMessageDialog(frame,
                 "Multi-level Feedback Queue(view.MFQ) algorithm"));
@@ -290,7 +279,7 @@ public class MFQ {
                 "First Come First Serve(FCFS) algorithm"));
         aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(frame,
                 "Operating system course design\n\n" +
-                        "Multi-level feedback queue algorithm simulation\n\n" +
+                        "Multi-level feedback queue algorithm simulator\n\n" +
                         "Copyright © 2020, E21714067@AHU, All Rights Reserved."));
     }
 
@@ -372,7 +361,7 @@ public class MFQ {
             }
 
             // 更新数据面板显示
-            showMFQ(MultilevelQueues);
+            showMLFQ(MultilevelQueues);
             if (!isAdd)
                 showFCFS(pcb);
             else
@@ -381,9 +370,7 @@ public class MFQ {
     }
 
     // 开始调度MFQ
-    public static void startMFQ() {
-        System.out.println("MFQ Queue size = " + curQueue.size());
-        System.out.println("currentPCBsNum_MFQ = " + currentPCBsNum_MFQ);
+    public static void startMLFQ() {
         currentTime = 0;
         isStartScheduling = true;
         isStopScheduling = false;
@@ -437,7 +424,7 @@ public class MFQ {
                                 }
                             }
                             // 刷新数据面板信息
-                            showMFQ(MultilevelQueues);
+                            showMLFQ(MultilevelQueues);
 
                             // 修改pcb属性
                             alive++;
@@ -499,7 +486,7 @@ public class MFQ {
                     currentTime++;
                 }
             }
-            showMFQ(MultilevelQueues);
+            showMLFQ(MultilevelQueues);
             // 所有进程均执行完成，进程调度完成
             if (!isStopScheduling && isStartScheduling && currentPCBsNum_MFQ == 0) {
                 isStartScheduling = false;
@@ -591,24 +578,25 @@ public class MFQ {
             showFCFSTable();
             // 所有进程均执行完成，进程调度完成
             if (!isStopScheduling && currentPCBsNum_FCFS == 0) {
+                currentTime++;
                 JOptionPane.showMessageDialog(frame, "撒花✿✿ヽ(°▽°)ノ✿\n\nFCFS执行完成!");
             }
         }).start();
     }
 
     // 点击按钮,强制结束进程调度
-    public static void stopMFQSimulation() {
+    public static void stopSimulation() {
         isStopScheduling = true;
         initMemory();
     }
 
     // 点击按钮,暂停进程调度
-    public static void pauseMFQSimulation() {
+    public static void pauseSimulation() {
         isPauseScheduling = true;
     }
 
     // 点击按钮,继续进程调度
-    public static void contMFQSimulation() {
+    public static void contSimulation() {
         isPauseScheduling = false;
     }
 
@@ -627,7 +615,7 @@ public class MFQ {
     }
 
     // 显示内存中的多级反馈队列
-    public static void showMFQ(MultilevelQueue[] MultilevelQueues) {
+    public static void showMLFQ(MultilevelQueue[] MultilevelQueues) {
         int queueLocationY = 0;
         JPanel queuesPanel = new JPanel();
 
