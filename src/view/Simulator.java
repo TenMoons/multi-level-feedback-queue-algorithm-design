@@ -16,32 +16,32 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Simulator {
     // 设置第一级队列的时间片大小默认值
-    public static int timeSlice = 2;
+    private static int timeSlice = 2;
     // 队列数量
-    public static final int QUEUE_SIZE = 5;
+    private static final int QUEUE_SIZE = 5;
     // 最大进程数
-    public static final int MEMORY_SIZE = 11;
+    private static final int MEMORY_SIZE = 11;
     // 时间片
-    public static int[] PCBsQueuesTimeSlice = new int[QUEUE_SIZE];
+    private static int[] PCBsQueuesTimeSlice = new int[QUEUE_SIZE];
     // 多级反馈队列
-    public static MultilevelQueue[] MultilevelQueues = new MultilevelQueue[QUEUE_SIZE];
+    private static MultilevelQueue[] MultilevelQueues = new MultilevelQueue[QUEUE_SIZE];
     // 即将到达的PCB队列
-    public static LinkedList<PCB> curQueue = new LinkedList<>();
+    private static LinkedList<PCB> curQueue = new LinkedList<>();
     // 已经使用的pid
-    public static int[] pidsUsed = new int[MEMORY_SIZE];
+    private static int[] pidsUsed = new int[MEMORY_SIZE];
     // 当前内存中的进程数
-    public static int currentPCBsNum_MFQ = 0;
-    public static int currentPCBsNum_FCFS = 0;
+    private static int currentPCBsNum_MFQ = 0;
+    private static int currentPCBsNum_FCFS = 0;
     // 全部已运行时间
-    public static int currentTime = 0;
+    private static int currentTime = 0;
     // 内存中能够容纳的最大进程数（这里取决于可分配的pid的个数）
-    public static final int PCB_MAX_NUM = 10;
+    private static final int PCB_MAX_NUM = 10;
     // 是否开始执行
-    public static boolean isStartScheduling;
+    private static boolean isStartScheduling;
     // 是否停止执行
-    public static boolean isStopScheduling;
+    private static boolean isStopScheduling;
     // 是否暂停执行
-    public static boolean isPauseScheduling;
+    private static boolean isPauseScheduling;
 
     // 界面组件
     private static JFrame frame;
@@ -171,10 +171,10 @@ public class Simulator {
         stopButton.setBounds(10, 520, 135, 40);
         stopButton.setFont(f);
         stopButton.setUI(myButtonUI);
-        startButton_MFQ.setBounds(10, 200, 135, 40);
+        startButton_MFQ.setBounds(10, 280, 135, 40);
         startButton_MFQ.setFont(f);
         startButton_MFQ.setUI(myButtonUI);
-        startButton_FCFS.setBounds(10, 280, 135, 40);
+        startButton_FCFS.setBounds(10, 200, 135, 40);
         startButton_FCFS.setFont(f);
         startButton_FCFS.setUI(myButtonUI);
         clearButton.setBounds(10, 600, 135, 40);
@@ -196,14 +196,15 @@ public class Simulator {
         statusTable.getColumnModel().getColumn(5).setPreferredWidth(138);
         statusTable.getColumnModel().getColumn(6).setPreferredWidth(138);
         statusTable.getColumnModel().getColumn(7).setPreferredWidth(138);
+        // 设置行高40像素
+        statusTable.setRowHeight(40);
 
-        statusTable.setRowHeight(40);  // 设置行高30像素
-
+        // 设置表头和表格内容居中
         DefaultTableCellRenderer cellrender = new DefaultTableCellRenderer();
         cellrender.setHorizontalAlignment(JLabel.CENTER);
-		statusTable.setDefaultRenderer(Object.class, cellrender);  // 表格内容居中
+		statusTable.setDefaultRenderer(Object.class, cellrender);
         ((DefaultTableCellRenderer)statusTable.getTableHeader().
-                getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);  // 表头内容居中
+                getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 
         FCFSscrollPane = new JScrollPane(statusTable);
         FCFSscrollPane.setBounds(152, 5, 1115, 295);
@@ -229,7 +230,7 @@ public class Simulator {
         frame.getContentPane().setLayout(null);
         frame.setVisible(true);
 
-        //为控件绑定监听器
+        // 为控件绑定监听器
         setComponentsListeners();
     }
 
@@ -274,12 +275,12 @@ public class Simulator {
         stopButton.addActionListener(e -> stopSimulation());
         clearButton.addActionListener(e -> clear());
         tutorialItemforMFQ.addActionListener(e -> JOptionPane.showMessageDialog(frame,
-                "Multi-level Feedback Queue(view.MFQ) algorithm"));
+                "MLFQ:多级反馈队列调度算法"));
         tutorialItemforLRU.addActionListener(e -> JOptionPane.showMessageDialog(frame,
-                "First Come First Serve(FCFS) algorithm"));
+                "FCFS:先来先服务调度算法"));
         aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(frame,
-                "Operating system course design\n\n" +
-                        "Multi-level feedback queue algorithm simulator\n\n" +
+                "操作系统课程设计\n\n" +
+                        "多级反馈队列算法与先来先服务算法模拟器\n\n" +
                         "Copyright © 2020, E21714067@AHU, All Rights Reserved."));
     }
 

@@ -1,14 +1,12 @@
 package view;
 
-import com.sun.awt.AWTUtilities;
-
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
 public class Initialization extends JWindow implements Runnable {
-    Thread splashThread;  //进度条更新线程
-    JProgressBar progress; //进度条
+    private Thread splashThread;  //进度条更新线程
+    private JProgressBar progress; //进度条
 
     public Initialization(String filename) {
         Container container = getContentPane(); // 得到容器
@@ -34,9 +32,6 @@ public class Initialization extends JWindow implements Runnable {
         this.setBounds(screen.width / 2 - getSize().width / 2,
                 (screen.height - getSize().height) / 2, 400 ,258);
         pack(); // 窗口适应组件尺寸
-//        setLocation((screen.width - getSize().width) / 2,
-//                (screen.height - getSize().height) / 2); // 设置窗口位置
-//        AWTUtilities.setWindowOpacity(this, 0.8f);
 
     }
 
