@@ -21,8 +21,6 @@ public class Simulator {
     private static final int QUEUE_SIZE = 5;
     // 最大进程数
     private static final int MEMORY_SIZE = 11;
-    // 时间片
-    private static int[] PCBsQueuesTimeSlice = new int[QUEUE_SIZE];
     // 多级反馈队列
     private static MultilevelQueue[] MultilevelQueues = new MultilevelQueue[QUEUE_SIZE];
     // 即将到达的PCB队列
@@ -254,9 +252,9 @@ public class Simulator {
             MultilevelQueues[i] = new MultilevelQueue(i);
         }
         // 初始化多级队列的时间片
-        for (int i = PCBsQueuesTimeSlice.length - 1; i >= 0; i--) {
+        for (int i = MultilevelQueues.length - 1; i >= 0; i--) {
             // 队列优先级每降一级，时间片翻倍
-            PCBsQueuesTimeSlice[i] = timeSlice;
+            MultilevelQueues[i].setTimeSlice(timeSlice);
             timeSlice *= 2;
         }
         // 初始化程序状态
@@ -412,7 +410,7 @@ public class Simulator {
                         int life = pcb.getLife();
                         int alive = pcb.getAlive();
                         // 获取当前队列时间片
-                        int curTimeSlice = PCBsQueuesTimeSlice[i];
+                        int curTimeSlice = MultilevelQueues[i].getTimeSlice();
 
                         // 当前时间片调度PCB
                         while (curTimeSlice > 0) {
